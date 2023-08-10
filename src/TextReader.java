@@ -23,21 +23,35 @@ public class TextReader {
 //        }
 //        return wordList;
 //    }
-    public KeyWordList UniqueReader(String filename, KeyWordList wordList) throws IOException {
+    public KeyWordList UniqueReader(String filename, KeyWordList wordList, int stringSize) throws IOException {
+
+        String[] keywordList = new String[stringSize];
+        String keyword = "";
 
         try {
             File textToParse = new File(filename);
             Scanner scanner = new Scanner(textToParse);
             RemoveNonalpha removeNonalpha = new RemoveNonalpha();
 
-            String keyword = removeNonalpha.RemoveNonalpha(scanner.next());
+            for (int i = 0; i < keywordList.length; i++) {
+                keywordList[i] = removeNonalpha.RemoveNonalpha(scanner.next());
+                keyword += keywordList[i] + " ";
+            }
+
+            keyword = keyword.strip();
 
             while (scanner.hasNext()) {
                 String word = removeNonalpha.RemoveNonalpha(scanner.next());
                 if (!word.isBlank()) {
                     wordList.foundWordSequence(keyword, word);
-                    keyword = word;
+                    keyword = "";
                 }
+                for (int i = 1; i < keywordList.length; i++) {
+                    keywordList[i - 1] = keywordList[i];
+                    keyword += keywordList[i - 1] + " ";
+                }
+                keywordList[keywordList.length - 1] = word;
+                keyword += word;
             }
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + e.getMessage());

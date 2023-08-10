@@ -18,29 +18,29 @@ public class NextWordList {
     }
     public void FoundNextWord(String nextWord) {
         Element current = first;
+        boolean added = false;
         if (current == null) {
+            added = true;
             Element element = new Element(nextWord);
             element.count++;
             first = element;
             last = element;
         }
-
         while (current != null) {
             if (nextWord.compareToIgnoreCase(current.word) == 0) {
                 current.count++;
+                added = true;
                 break;
             }
             else {
-                Element element = new Element(nextWord);
-////                element.count++;
-                last.next = element;
-                last = last.next;
                 current = current.next;
-//                last.next = element;
-//                last = element;
-//                current = current.next;
-//                break;
             }
+        }
+        if (!added) {
+            Element element = new Element(nextWord);
+            element.count++;
+            last.next = element;
+            last = element;
         }
     }
     public void print() {
